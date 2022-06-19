@@ -9,8 +9,9 @@ import pickle
 import codecs
 import fnmatch
 
+
 # This is the path where the processed data is created and then stored, update it to where you want to see your data
-DATA_PATH = "./punctdata"
+DATA_PATH = os.path.join('data','preprocessed')
 END = "</S>"
 UNK = "<UNK>"
 
@@ -27,18 +28,21 @@ TEST_FILE = os.path.join(DATA_PATH, "test")
 WORD_VOCAB_FILE = os.path.join(DATA_PATH, "vocabulary")
 PUNCT_VOCAB_FILE = os.path.join(DATA_PATH, "punctuations")
 
+PUNCTUATION_VOCABULARY = {SPACE, ",COMMA", ".PERIOD", "?QUESTIONMARK", "!EXCLAMATIONMARK", ":COLON", ";SEMICOLON"}
+PUNCTUATION_MAPPING = {}
+
 # Here are some punctuations to choose from, depdending on what you want your system to learn
 # PUNCTUATION_VOCABULARY = {SPACE, ",COMMA", ".PERIOD", "?QUESTIONMARK", "!EXCLAMATIONMARK", ":COLON", ";SEMICOLON", "-DASH"}
 # PUNCTUATION_MAPPING = {}
 
 # Comma, period & question mark only:
-PUNCTUATION_VOCABULARY = {SPACE, ",COMMA", ".PERIOD", "?QUESTIONMARK"}
-PUNCTUATION_MAPPING = {
-    "!EXCLAMATIONMARK": ".PERIOD",
-    ":COLON": ",COMMA",
-    ";SEMICOLON": ".PERIOD",
-    "-DASH": ",COMMA",
-}
+# PUNCTUATION_VOCABULARY = {SPACE, ",COMMA", ".PERIOD", "?QUESTIONMARK"}
+# PUNCTUATION_MAPPING = {
+#     "!EXCLAMATIONMARK": ".PERIOD",
+#     ":COLON": ",COMMA",
+#     ";SEMICOLON": ".PERIOD",
+#     "-DASH": ",COMMA",
+# }
 
 EOS_TOKENS = {".PERIOD", "?QUESTIONMARK", "!EXCLAMATIONMARK"}
 CRAP_TOKENS = {
@@ -273,10 +277,10 @@ if __name__ == "__main__":
             "The path to the source data directory with txt files is missing. The command should be: python data.py {folder with train, test and dev splits}"
         )
 
-    if not os.path.exists(DATA_PATH):
-        os.makedirs(DATA_PATH)
-    else:
-        sys.exit("Data already exists")
+#    if not os.path.exists(DATA_PATH):
+#        os.makedirs(DATA_PATH)
+#    else:
+#        sys.exit("Data already exists")
 
     create_dev_test_train_split_and_vocabulary(
         path, True, TRAIN_FILE, DEV_FILE, TEST_FILE

@@ -9,7 +9,9 @@ import data
 import codecs
 import sys
 
-MAPPING = {"!EXCLAMATIONMARK": ".PERIOD", ":COLON": ".COMMA", ";SEMICOLON": ".PERIOD", "-DASH": ",COMMA"}
+MAPPING = {}
+#MAPPING = {"!EXCLAMATIONMARK": ".PERIOD", ":COLON": ".COMMA", ";SEMICOLON": ".PERIOD", "-DASH": ",COMMA"}
+
 
 def compute_error(target_paths, predicted_paths):
 
@@ -74,7 +76,8 @@ def compute_error(target_paths, predicted_paths):
                 false_positives[predicted_punctuation] = false_positives.get(predicted_punctuation, 0.) + float(not is_correct)
                 false_negatives[target_punctuation] = false_negatives.get(target_punctuation, 0.) + float(not is_correct)
 
-                assert target_stream[t_i] == predicted_stream[p_i] or predicted_stream[p_i] == "<unk>", \
+                
+                assert target_stream[t_i].lower() == predicted_stream[p_i].lower() or predicted_stream[p_i] == "<unk>", \
                         ("File: %s \n" + \
                         "Error: %s (%s) != %s (%s) \n" + \
                         "Target context: %s \n" + \
@@ -83,7 +86,9 @@ def compute_error(target_paths, predicted_paths):
                         target_stream[t_i], t_i, predicted_stream[p_i], p_i,
                         " ".join(target_stream[t_i-2:t_i+2]),
                         " ".join(predicted_stream[p_i-2:p_i+2]))
+                
 
+                
                 t_i += 1
                 p_i += 1
 
@@ -109,12 +114,12 @@ def compute_error(target_paths, predicted_paths):
         precision = (true_positives.get(p,0.) / (true_positives.get(p,0.) + false_positives[p])) if p in false_positives else nan
         recall = (true_positives.get(p,0.) / (true_positives.get(p,0.) + false_negatives[p])) if p in false_negatives else nan
         f_score = (2. * precision * recall / (precision + recall)) if (precision + recall) > 0 else nan        
-        print("{:<16} {:<9} {:<9} {:<9}".format(punctuation, round(precision,3)*100, round(recall,3)*100, round(f_score,3)*100))
+        print("{:<16} {:<9.3f} {:<9.3f} {:<9.3f}".format(punctuation, round(precision,3)*100, round(recall,3)*100, round(f_score,3)*100))
     print("-"*46)
     pre = overall_tp/(overall_tp+overall_fp) if overall_fp else nan
     rec = overall_tp/(overall_tp+overall_fn) if overall_fn else nan
     f1 = (2.*pre*rec)/(pre+rec) if (pre + rec) else nan
-    print("{:<16} {:<9} {:<9} {:<9}".format("Overall", round(pre,3)*100, round(rec,3)*100, round(f1,3)*100))
+    print("{:<16} {:<9.3f} {:<9.3f} {:<9.3f}".format("Overall", round(pre,3)*100, round(rec,3)*100, round(f1,3)*100))
     print("Err: %s%%" % round((100.0 - float(total_correct) / float(counter-1) * 100.0), 2))
     print("SER: %s%%" % round((substitutions + deletions + insertions) / (correct + substitutions + deletions) * 100, 1))
 

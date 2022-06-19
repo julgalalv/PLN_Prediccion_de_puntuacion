@@ -10,8 +10,10 @@ import os.path
 import tensorflow as tf
 import numpy as np
 
-MAX_EPOCHS = 50
-MINIBATCH_SIZE = 32
+# Establecemos 10 el número máximo de epochs y a 64 el tamaño de los minibatches
+# MAX_EPOCHS = 50
+MAX_EPOCHS = 4
+MINIBATCH_SIZE = 64
 CLIPPING_THRESHOLD = 2.0
 PATIENCE_EPOCHS = 1
 

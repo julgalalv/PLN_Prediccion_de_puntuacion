@@ -2,6 +2,14 @@ import settings
 from preprocessor import *
 
 class ModelNgram():
+
+    """
+    Esta clase define el podelo predictivo basado en N-gramas del Apartado 4. Aunque en el trabajo se especifica explícitamente
+    que sean 4gramas, la generalización es inmediata.
+
+    Este modelo no requiere de la tokenización de los signos de puntuación por lo que puede trabajar con los datos
+    en crudo.
+    """
     # Definimos por defecto 4grams
     def __init__(self, N = 4):
         assert N > 1, 'N must be greater or equal 2' 
@@ -19,7 +27,9 @@ class ModelNgram():
         self.trained = False
                 
     def entrena(self, train_file_path):
-        
+        """
+        Entrena el modelo dada la ruta al corpus de entrenamiento 'train_file_path'
+        """
         # Conjunto de tuplas vistas
         tuplas = set()
         
@@ -52,8 +62,11 @@ class ModelNgram():
             self.trained_dict[tupla] = self.operacion_mas_probable(tupla)
         self.trained = True
         
-    # Predice la operación dada una tupla calculando el máximo de ocurrencias consultando counts_dict        
     def operacion_mas_probable(self, tupla):  
+        """
+        Dada una (N-1) tupla, devuelve la operación más probablea partir del máximo de ocurrencias 
+        consultando counts_dict    
+        """
         v = 0
         prediction = 'NONE'
         for i in self.counts_dict:
@@ -63,8 +76,10 @@ class ModelNgram():
                 v = value
         return prediction
     
-    # Predice la operación dada una tupla consultando directamente el diccionario trained_model
     def predice(self,tupla):
+        """
+        Predice la operación dada una tupla consultando directamente el diccionario trained_model  
+        """
         #Devolvemos excepción si modelo aún no entrenado
         self.check_entrenado()
         return self.trained_dict.get(tupla,'NONE')
