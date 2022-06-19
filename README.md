@@ -4,10 +4,6 @@ Proyecto correspondiente a la Tarea 2 evaluable de la asignatura de Procesamient
 
 # Ejercicio práctico: Predicción de puntuación
 
-Alumno: Julián María Galindo Álvarez
-
-DNI: 20081281E
-
 ## Introducción
 
 Este trabajo aborda la tarea de ''Predicción de puntuación'', donde el objetivo va a ser definir una serie de modelos que puedan introducir puntuación en una entrada que carece de puntuación.
