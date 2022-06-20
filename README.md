@@ -2,7 +2,12 @@
 
 Proyecto correspondiente a la Tarea 2 evaluable de la asignatura de Procesamiento del Lenguaje Natural impartida en el Máster de Lógica, Computación e Inteligencia Artificial de la Universidad de Sevilla
 
+Repositorio del proyecto:
+
+https://github.com/julgalalv/PLN_Prediccion_de_puntuacion
+
 # Ejercicio práctico: Predicción de puntuación
+
 
 ## Introducción
 
@@ -20,9 +25,8 @@ A lo largo del trabajo se vana  definir dos modelos, uno de puntuación básica 
 
 ## Presentación del trabajo
 
-El trabajo está pensado para ser visto en tres partes y en el siguiente orden:
- 1. Apartados 1 a 5: Notebook TRABAJO_PLN_APARTADOS_1_5_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
- 1. Apartado 6: Notebook TRABAJO_PLN_APARTADO_6_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
+El trabajo está dividido en dos archivos:
+ 1. Apartados 1 a 6: Notebook TRABAJO_PLN_APARTADOS_1_6_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
  1. Apartado 7: Documento TRABAJO_PLN_APARTADO_7_JULIAN_GALINDO_ALVAREZ_20091281E.pdf
 
 Los notebooks se apoyan en módulos python definidos en el repositorio, que voy importando conforme son necesarios. Por ello recomiendo recorrer los notebooks junto al código del repositorio. El repositorio se describe en la siguiente sección.

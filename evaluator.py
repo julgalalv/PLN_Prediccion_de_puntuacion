@@ -86,7 +86,7 @@ def evaluate_example(punctuationFunction, check, test,model = None, add_punct_ba
     vct = verifyPunctuation(test,check,prepared)
     # Diferencia entre el test original y el modificado (modificaciones hechas por la función)
     vtmt = verifyPunctuation(test,punctuated,prepared)
-    # Diferencia entre el check y el modificado (modificaciones hechas por la función)
+    # Diferencia entre el check y el modificado
     vcmt = verifyPunctuation(punctuated,check,prepared)
     es_correcto = 1 if len(vcmt) == 0 else 0
     # número de cambios hechos por la función            
