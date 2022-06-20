@@ -25,7 +25,7 @@ El trabajo está pensado para ser visto en tres partes y en el siguiente orden:
  1. Apartado 6: Notebook TRABAJO_PLN_APARTADO_6_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
  1. Apartado 7: Documento TRABAJO_PLN_APARTADO_7_JULIAN_GALINDO_ALVAREZ_20091281E.pdf
 
-Los notebooks se apoyen en módulos definidos en el repositorio, que voy importando conforme son necesarios. Por ello recomiendo recorrer los notebooks junto al código del repositorio. El repositorio se describe en la siguiente sección.
+Los notebooks se apoyan en módulos python definidos en el repositorio, que voy importando conforme son necesarios. Por ello recomiendo recorrer los notebooks junto al código del repositorio. El repositorio se describe en la siguiente sección.
  
 ## Estructura del repositorio
 
