@@ -25,7 +25,8 @@ En este módulo se definen funciones que son necesarias para el procesamiento de
 ### REFERENTES A APARTADOS 1-5:
 ###############################
 
-def change_initial(string,uppercase):
+
+def change_initial(text,uppercase):
     """
     Función que pone el primer caracter de un string en mayúscula o minúscula según 
     el parámetro booleano 'uppercase'
@@ -37,13 +38,12 @@ def change_initial(string,uppercase):
     output: 
         string con la inicial cambiada
     """
-    if not string:
+    if not text:
         return
-    init = string[0]
+    init = text[0]
     new_initial = init.upper() if uppercase else init.lower()
-    temp = list(string)
-    temp[0] = new_initial
-    return ''.join(temp)
+    return new_initial + (text[1:] if len(text) > 1 else '')
+
 
 def padding(list1, list2):
     """

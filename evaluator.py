@@ -9,7 +9,7 @@ los métodos correspondientes a los Apartados 2, 3 y 5.
 #################
 # APARTADO 2
 #################
-def verifyPunctuation(check, test):
+def verifyPunctuation(check, test, prepared = False):
     """
     Función principal de Apartado 2. Dados un string check y test, devuelve las operaciones
     necesarias para llegar de test a check (con índice de token referente a check). 
@@ -20,8 +20,10 @@ def verifyPunctuation(check, test):
 
     """
     # Tokenizamos los textos
-    check = tokenizer(check)
-    test = tokenizer(test)
+    check = tokenizer(check,prepared)
+    test = tokenizer(test,prepared)
+    punct_marks = settings.PUNCT_MARKS if not prepared else settings.PUNCT_MARKS_TOKENS
+
     # Hacemos padding
     check, test = padding(check, test)
     l_check = len(check)
@@ -31,8 +33,8 @@ def verifyPunctuation(check, test):
         # Deletions:
         # Si test[i] no es un sdp pero check[i] si y las palabras anteriores coinciden salvo mayúsculas
         # añadimos la modificación ('D', i) e insertamos el correspondiente sdp faltante en test.
-        if check[i] in settings.PUNCT_MARKS:
-            if test[i] not in settings.PUNCT_MARKS and test[i-1].upper() == check[i - 1].upper():
+        if check[i] in punct_marks:
+            if test[i] not in punct_marks and test[i-1].upper() == check[i - 1].upper():
                 modifications.append(('D',i))
                 test.insert(i,check[i])
                 
@@ -42,8 +44,8 @@ def verifyPunctuation(check, test):
         # Insertions:
         # Si test[i] es un sdp pero check[i] no y las palabras anteriores coinciden salvo mayúsculas
         # añadimos la modificación ('I', i) y eliminamos el correspondiente sdp en test.
-        if check[i] not in settings.PUNCT_MARKS:
-            if test[i] in settings.PUNCT_MARKS and test[i-1].upper() == check[i - 1].upper():
+        if check[i] not in punct_marks:
+            if test[i] in punct_marks and test[i-1].upper() == check[i - 1].upper():
                 modifications.append(('I',i))
                 test.pop(i)
                 
@@ -61,7 +63,7 @@ def verifyPunctuation(check, test):
 # APARTADOS 3 Y 5
 #################
 
-def evaluate_example(punctuationFunction, check, test,model = None, add_punct_basic = False, print_info = True):
+def evaluate_example(punctuationFunction, check, test,model = None, add_punct_basic = False, print_info = True, prepared = False):
     """
     Evalúa un método de punctuación haciendo la predicción in situ sobre dos strings. 
     Calcula las siguientes métricas:
@@ -79,12 +81,13 @@ def evaluate_example(punctuationFunction, check, test,model = None, add_punct_ba
     """
     if model is not None: punctuated = punctuationFunction(model,test,add_punct_basic)
     else: punctuated = punctuationFunction(test)
+    punct_marks = settings.PUNCT_MARKS if not prepared else settings.PUNCT_MARKS_TOKENS
     # Diferencia entre el check y el test original (cambios necesarios)
-    vct = verifyPunctuation(test,check)
+    vct = verifyPunctuation(test,check,prepared)
     # Diferencia entre el test original y el modificado (modificaciones hechas por la función)
-    vtmt = verifyPunctuation(test,punctuated)
+    vtmt = verifyPunctuation(test,punctuated,prepared)
     # Diferencia entre el check y el modificado (modificaciones hechas por la función)
-    vcmt = verifyPunctuation(punctuated,check)
+    vcmt = verifyPunctuation(punctuated,check,prepared)
     es_correcto = 1 if len(vcmt) == 0 else 0
     # número de cambios hechos por la función            
     hechos_ = len(vtmt)
@@ -99,8 +102,9 @@ def evaluate_example(punctuationFunction, check, test,model = None, add_punct_ba
     # ('I',23) y sin embargo es incorrecto. En resumen, verifyPunctuation no nos devuelve información sobre el 
     # token en si. Corregimos esto con un factor de error.
     error_ = 0
-    l_t = len(tokenizer(test))
-    l_c = len(tokenizer(check))
+    check_tokens = tokenizer(check,prepared)
+    l_t = len(tokenizer(test,prepared))
+    l_c = len(check_tokens)
     cambios = list(vtmt)
     diferencias = list(vcmt)
     # Para cada token que aparece en la verificación de la predicción con el test (cambios), comprobamos si 
@@ -112,7 +116,9 @@ def evaluate_example(punctuationFunction, check, test,model = None, add_punct_ba
         for k in range(len(diferencias)):
             error_ += 1 if token == diferencias[k][1] and token<l_t and diferencias[k][1]<l_c and operacion == 'I' and diferencias[k][0] == 'S' else 0
     # El token final lo tratamos por separado
-    error_ += 1 if punctuated[-1] in settings.PUNCT_MARKS and check[-1] in settings.PUNCT_MARKS and punctuated[-1] != check[-1] else 0
+    last_punct_token = tokenizer(punctuated,prepared)[-1]
+    last_check_token = check_tokens[-1]
+    error_ += 1 if last_punct_token in punct_marks and last_check_token in punct_marks and last_punct_token != last_check_token else 0
     # Corregimos correctos_ en base al error
     correctos_ -= error_
     # métricas medias
@@ -136,7 +142,7 @@ def evaluate_example(punctuationFunction, check, test,model = None, add_punct_ba
     return es_correcto, precision, recall, hechos_, correctos_, necesarios_
 
 
-def evaluate(punctuationFunction, check_file_path , test_file_path , model = None, add_punct_basic = False):
+def evaluate(punctuationFunction, check_file_path , test_file_path , model = None, add_punct_basic = False, prepared = False):
 
     """
     Función evaluadiora principal. Evalúa un método de punctuación haciendo la predicción in situ sobre dos archivos.
@@ -172,7 +178,7 @@ def evaluate(punctuationFunction, check_file_path , test_file_path , model = Non
             test = test_lines[i].rstrip(' \n')
             es_correcto, prec, rec, hechos_, correctos_, necesarios_ =\
                 evaluate_example(punctuationFunction,check,test,model=model,\
-                                 add_punct_basic = add_punct_basic,print_info=False)
+                                 add_punct_basic = add_punct_basic,print_info=False, prepared = prepared)
             
             # métricas por línea
             num_correctos += es_correcto
@@ -217,7 +223,7 @@ def evaluate(punctuationFunction, check_file_path , test_file_path , model = Non
     result_dict = {'precision_global':precision, 'recall_global':recall, 'F1_global':F1,'precision_mean':precision_media, 'recall_mean':recall_media, 'F1_mean':F1_media, 'score':rendimiento }
     return result_dict
     
-def evaluate_example_from_corpus(punctuationFunction, check_file_path, test_file_path,corpus_line = 0, model = None,add_punct_basic = False):
+def evaluate_example_from_corpus(punctuationFunction, check_file_path, test_file_path,corpus_line = 0, model = None,add_punct_basic = False, prepared = False):
     """
     Esta función sirve simplemente para explorar el corpus comparando el resultado de la función de puntuación.
         
@@ -228,7 +234,7 @@ def evaluate_example_from_corpus(punctuationFunction, check_file_path, test_file
     with open(test_file_path, 'r', encoding='utf-8-sig') as test_file, open(check_file_path, 'r', encoding='utf-8-sig') as check_file:
         check = check_file.readlines()[corpus_line].rstrip(' \n')
         test = test_file.readlines()[corpus_line].rstrip(' \n')
-        evaluate_example(punctuationFunction,check,test,model = model,add_punct_basic = add_punct_basic,print_info=True)
+        evaluate_example(punctuationFunction,check,test,model = model,add_punct_basic = add_punct_basic,print_info=True, prepared=prepared)
     test_file.close()
     check_file.close()
 
@@ -237,16 +243,17 @@ def evaluate_example_from_corpus(punctuationFunction, check_file_path, test_file
 Las siguientes funciones son análogas a las anteriores pero en lugar de hacer la predicción in situ
 tienen de entrada las rutas al archivo de check y test YA PUNTUADO por algún modelo.
 """
-def evaluate_example_punctuated(check, test, punctuated, print_info = True):
+def evaluate_example_punctuated(check, test, punctuated, print_info = True, prepared = False, readeable = False):
     """
     Análoga a :func:`evaluate_example` pero 'test' es un string ya puntuado por algún modelo.
     """
+    punct_marks = settings.PUNCT_MARKS if not prepared else settings.PUNCT_MARKS_TOKENS
     # Diferencia entre el check y el test original (cambios necesarios)
-    vct = verifyPunctuation(test,check)
+    vct = verifyPunctuation(test,check,prepared)
     # Diferencia entre el test original y el modificado (modificaciones hechas por la función)
-    vtmt = verifyPunctuation(test,punctuated)
+    vtmt = verifyPunctuation(test,punctuated,prepared)
     # Diferencia entre el check y el modificado (modificaciones hechas por la función)
-    vcmt = verifyPunctuation(punctuated,check)
+    vcmt = verifyPunctuation(punctuated,check,prepared)
     es_correcto = 1 if len(vcmt) == 0 else 0
     # número de cambios hechos por la función            
     hechos_ = len(vtmt)
@@ -261,8 +268,9 @@ def evaluate_example_punctuated(check, test, punctuated, print_info = True):
     # ('I',23) y sin embargo es incorrecto. En resumen, verifyPunctuation no nos devuelve información sobre el 
     # token en si. Corregimos esto con un factor de error.
     error_ = 0
-    l_t = len(tokenizer(test))
-    l_c = len(tokenizer(check))
+    check_tokens = tokenizer(check,prepared)
+    l_t = len(tokenizer(test,prepared))
+    l_c = len(check_tokens)
     cambios = list(vtmt)
     diferencias = list(vcmt)
     # Para cada token que aparece en la verificación de la predicción con el test (cambios), comprobamos si 
@@ -274,13 +282,24 @@ def evaluate_example_punctuated(check, test, punctuated, print_info = True):
         for k in range(len(diferencias)):
             error_ += 1 if token == diferencias[k][1] and token<l_t and diferencias[k][1]<l_c and operacion == 'I' and diferencias[k][0] == 'S' else 0
     # El token final lo tratamos por separado
-    error_ += 1 if punctuated[-1] in settings.PUNCT_MARKS and check[-1] in settings.PUNCT_MARKS and punctuated[-1] != check[-1] else 0
+    last_punct_token = tokenizer(punctuated,prepared)[-1]
+    last_check_token = check_tokens[-1]
+    error_ += 1 if last_punct_token in punct_marks and last_check_token in punct_marks and last_punct_token != last_check_token else 0
     # Corregimos correctos_ en base al error
     correctos_ -= error_
     # métricas medias
     precision = (correctos_ / hechos_) if hechos_ != 0 else 0
     recall = (correctos_ / necesarios_) if necesarios_ != 0 else 0
     
+    def to_readeable(text):
+        dict = settings.PUNCT_MARK_DICT
+        rev_dict = inv_map = {v: k for k, v in dict.items()}
+        return "".join(rev_dict.get(w,' '+w) for w in text.split())[1:]       
+         
+    if readeable:
+        punctuated = to_readeable(punctuated)
+        check = to_readeable(check)
+
     # Si print_info decuelve información sobre el proceso
     if print_info:
         print('TEST LINE: \n ',test)
@@ -298,7 +317,7 @@ def evaluate_example_punctuated(check, test, punctuated, print_info = True):
     return es_correcto, precision, recall, hechos_, correctos_, necesarios_
 
 
-def evaluate_punctuated(check_file_path , test_file_path, punctuated_file_path):
+def evaluate_punctuated(check_file_path , test_file_path, punctuated_file_path, prepared = False):
     """
     Análoga a :func:`evaluate` pero 'test_file_path' es es la ruta a un archivo 
     ya puntuado por algún modelo.
@@ -332,7 +351,7 @@ def evaluate_punctuated(check_file_path , test_file_path, punctuated_file_path):
             check = check_lines[i].rstrip(' \n')
             test = test_lines[i].rstrip(' \n')
             punc = punc_lines[i].rstrip(' \n')
-            es_correcto, prec, rec, hechos_, correctos_, necesarios_ = evaluate_example_punctuated(check,test,punc,print_info=False)
+            es_correcto, prec, rec, hechos_, correctos_, necesarios_ = evaluate_example_punctuated(check,test,punc,print_info=False, prepared=prepared)
             
             # métricas por línea
             num_correctos += es_correcto
@@ -376,3 +395,17 @@ def evaluate_punctuated(check_file_path , test_file_path, punctuated_file_path):
 
     result_dict = {'precision_global':precision, 'recall_global':recall, 'F1_global':F1,'precision_mean':precision_media, 'recall_mean':recall_media, 'F1_mean':F1_media, 'score':rendimiento }
     return result_dict
+
+def evaluate_example_from_corpus_punctuated(check_file_path, test_file_path, punctuated_file_path,corpus_line = 0, prepared = False, readeable = False):
+    """
+    Análoga a :func:`evaluate_from_corpus` pero 'test_file_path' es es la ruta a un archivo 
+    ya puntuado por algún modelo.
+    """
+    with open(test_file_path, 'r', encoding='utf-8-sig') as test_file, open(check_file_path, 'r', encoding='utf-8-sig') as check_file,\
+         open(punctuated_file_path, 'r', encoding='utf-8-sig') as punctuated_file:
+        check = check_file.readlines()[corpus_line].rstrip(' \n')
+        test = test_file.readlines()[corpus_line].rstrip(' \n')
+        punctuated = punctuated_file.readlines()[corpus_line].rstrip(' \n')
+        evaluate_example_punctuated(check,test, punctuated,print_info=True, prepared=prepared, readeable=readeable)
+    test_file.close()
+    check_file.close()

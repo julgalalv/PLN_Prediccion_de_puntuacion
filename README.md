@@ -41,13 +41,15 @@ En cuanto a los directorios tenemos:
         |  |-raw
         |-predicted
         |-punctuator2tf2
+        |-zips
 
  * **data**: Contiene subdirectorios tando de datos del dataser original como procesados.
- * **raw**: Contiene los cospues de dataset originales.
- * **preprocessed**: Contiene archivos generados de preprocesamiento de los corpus (apartado 6)
- * **prepared**: Contiene archivos generados de preprocesamiento de los corpus preparados para el modelo de Ottokar Tilk y Tanel Alum (apartado 6).
+ * **raw**: Contiene los corpus de dataset originales.
+ * **prepared**: Contiene archivos generados de preprocesamiento de los corpus (apartado 6)
+ * **preprocessed**: Contiene archivos generados de preprocesamiento de los corpus vectorizados para el modelo de Ottokar Tilk y Tanel Alum (apartado 6).
  * **predicted**: Contiene archivos con predicciones (puntuaciones) realizadas por los modelos.
  * **punctuator2tf2**: Modelo de Ottokar Tilk y Tanel Alum (apartado 6), implementación en TensorFLow con modificaciones
  realizadas por mí para adaptalo a este trabajo.
+ * **zips**: contiene el dataset y el modelo punctuator2tf2 comprimidos.
  
 **NOTA**: A lo largo del trabajo voy a ir importando las funciones de cada archivo conforma hagan falta, recomiendo ir al código para consultarlas conforme se avanza en este documento.

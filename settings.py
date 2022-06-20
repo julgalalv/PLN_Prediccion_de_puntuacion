@@ -37,7 +37,7 @@ def initialize():
 
     PUNCT_MARK_DICT = {".": ".PERIOD", ",": ",COMMA", ";": ";SEMICOLON", ":": ":COLON", "?": "?QUESTIONMARK", "!": "!EXCLAMATIONMARK"}
     PUNCT_MARKS = ['.',',',';',':','?','!'] # Signos de puntuación (sdp)
-    MAYUS_MARKS = ['.','?','!'] # Signos que afectan a las mayúscualas del entorno
+    MAYUS_MARKS = ['.','?','!'] # Signos de final de oración
     PUNCT_MARKS_TOKENS = [PUNCT_MARK_DICT[p] for p in PUNCT_MARKS]
     MAYUS_MARKS_TOKENS = [PUNCT_MARK_DICT[p] for p in MAYUS_MARKS]
     NUM = '<NUM>'
@@ -53,8 +53,8 @@ def initialize():
     PREDICTED_DIR = os.path.join(CURRENT_DIR,'predicted')
 
     # zips con el dataset y el modelo de Ottokar Tilk y Tanel Alum en caso necesario
-    dataset_zip_dir = os.path.join(CURRENT_DIR,'PLN-MULCIA-Junio-2022-Dataset.zip')
-    punctuator2tf2_zip_dir = os.path.join(CURRENT_DIR,'punctuator2tf2.zip')
+    dataset_zip_dir = os.path.join(CURRENT_DIR,'zips','PLN-MULCIA-Junio-2022-Dataset.zip')
+    punctuator2tf2_zip_dir = os.path.join(CURRENT_DIR,'zips','punctuator2tf2.zip')
     
     # creación de directorios y descompresión de archivos en caso necesario
     if not os.path.exists(DATA_DIR):

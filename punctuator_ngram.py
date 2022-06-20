@@ -55,7 +55,7 @@ def addPunctuationNgram(model,example,add_basic_punct = False):
     if add_basic_punct:
         dot = '' if result[-1] in model.punct_marks else '.'
         result = change_initial(result + dot,uppercase=True)
-    return result 
+    return result  
     
 def addPunctuationNgram_file(model,in_file_path, out_file_name='', line_by_line = True, add_basic_punct = False):
     """

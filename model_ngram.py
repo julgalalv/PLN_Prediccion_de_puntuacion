@@ -4,7 +4,7 @@ from preprocessor import *
 class ModelNgram():
 
     """
-    Esta clase define el podelo predictivo basado en N-gramas del Apartado 4. Aunque en el trabajo se especifica explícitamente
+    Esta clase define el modelo predictivo basado en N-gramas del Apartado 4. Aunque en el trabajo se especifica explícitamente
     que sean 4gramas, la generalización es inmediata.
 
     Este modelo no requiere de la tokenización de los signos de puntuación por lo que puede trabajar con los datos

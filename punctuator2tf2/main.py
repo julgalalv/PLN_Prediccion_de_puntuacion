@@ -10,9 +10,15 @@ import os.path
 import tensorflow as tf
 import numpy as np
 
-# Establecemos 10 el número máximo de epochs y a 64 el tamaño de los minibatches
-# MAX_EPOCHS = 50
-MAX_EPOCHS = 4
+"""
+Archivo adaptado para el Trabajo de Predicción de Puntuación de la asignatura Procecsamiento del Lenguaje Natural del Máster MULCIA
+    Repositorio original: https://github.com/ottokart/punctuator2
+    Reimplementación de los autores en tensorflor : https://github.com/cadia-lvl/punctuation-prediction/tree/master/punctuator2tf2
+"""
+
+# Establecemos 8 el número máximo de epochs y a 64 el tamaño de los minibatches
+# No cambiamos más nada en este archivo
+MAX_EPOCHS = 8
 MINIBATCH_SIZE = 64
 CLIPPING_THRESHOLD = 2.0
 PATIENCE_EPOCHS = 1
