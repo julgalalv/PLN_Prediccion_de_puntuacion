@@ -18,12 +18,17 @@ En concreto, los signos de puntuación que se van a considerar son:
 
 A lo largo del trabajo se vana  definir dos modelos, uno de puntuación básica y otro basado en 4-gramas. Además se va a definir una serie de funciones para evaluar los modelos basadas en una función implementada (verifyPunctuation), basándose en la distancia de Levenshtein.
 
-Este notebook contiene los apartados del 1 al 5 del trabajo, dejando el apartado 6 en el notebook TRABAJO_PLN_APARTADO_6_JULIAN_GALINDO_ALVAREZ_20091281E y el 7 en en documento TRABAJO_PLN_APARTADO_7_JULIAN_GALINDO_ALVAREZ_20091281E.pdf
+## Presentación del trabajo
 
-Las funciones definidas en cada uno de los apartados se encuentran en los correspondientes archivos python de este directorio. En cualquier caso, este proyecto está disponible en el siguiente repositorio de github:
+El trabajo está pensado para ser visto en tres partes y en el siguiente orden:
+    1. Apartados 1 a 5: Notebook TRABAJO_PLN_APARTADOS_1_5_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
+    1. Apartado 6: Notebook TRABAJO_PLN_APARTADO_6_JULIAN_GALINDO_ALVAREZ_20091281E.ipynb
+    1. Apartado 7: Documento TRABAJO_PLN_APARTADO_7_JULIAN_GALINDO_ALVAREZ_20091281E.pdf
 
- * [github.com/julgalalv/PLN_Prediccion_de_puntuacion](https://github.com/julgalalv/PLN_Prediccion_de_puntuacion)
+Los notebooks se apoyen en módulos definidos en el repositorio, que voy importando conforme son necesarios. Por ello recomiendo recorrer los notebooks junto al código del repositorio. El repositorio se describe en la siguiente sección.
  
+## Estructura del repositorio
+
 La estructura del repositorio es la siguiente:
  * **settings.py**: parámetros globales y creación de directorios en caso necesario. 
  * **preprocessor.py**: En este módulo se definen funciones que son necesarias para el procesamiento de los datos, necesarios para todos los apartados.
